@@ -1,109 +1,4 @@
-# Your Tasks
-
-![Databaseball](<../../.gitbook/assets/databaseball (2) (3) (3) (3) (2) (8).jpg>)
-
-In this project we will be working with the commonly-used [Lahman baseball statistics database](http://www.seanlahman.com/baseball-archive/statistics/) (our friends at the San Francisco Giants tell us they use it!) The database contains pitching, hitting, and fielding statistics for Major League Baseball from 1871 through 2019. It includes data from the two current leagues (American and National), four other "major" leagues (American Association, Union Association, Players League, and Federal League), and the National Association of 1871-1875.
-
-At this point you should be able to run SQLite and view the database using either `./sqlite3 -header lahman.db` (if in the previous section you downloaded a precompiled binary) or `sqlite3 -header lahman.db` otherwise. If you're using windows and you find that the previous command doesn't work, try running `winpty ./sqlite3 lahman.db`.
-
-```
-$ sqlite3 lahman.db
-SQLite version 3.33.0 2020-08-14 13:23:32
-Enter ".help" for usage hints.
-sqlite> .tables
-```
-
-Try running a few sample commands in the SQLite console and see what they do:
-
-```
-sqlite> .schema people
-```
-
-```
-sqlite>  SELECT playerid, namefirst, namelast FROM people;
-```
-
-```
-sqlite> SELECT COUNT(*) FROM fielding;
-```
-
-## Understanding the Schema
-
-The database is comprised of the following main tables:
-
-```
-People - Player names, date of birth (DOB), and biographical info
-Batting - batting statistics
-Pitching - pitching statistics
-Fielding - fielding statistics
-```
-
-It is supplemented by these tables:
-
-```
-  AllStarFull - All-Star appearances
-  HallofFame - Hall of Fame voting data
-  Managers - managerial statistics
-  Teams - yearly stats and standings
-  BattingPost - post-season batting statistics
-  PitchingPost - post-season pitching statistics
-  TeamFranchises - franchise information
-  FieldingOF - outfield position data
-  FieldingPost- post-season fielding data
-  FieldingOFsplit - LF/CF/RF splits
-  ManagersHalf - split season data for managers
-  TeamsHalf - split season data for teams
-  Salaries - player salary data
-  SeriesPost - post-season series information
-  AwardsManagers - awards won by managers
-  AwardsPlayers - awards won by players
-  AwardsShareManagers - award voting for manager awards
-  AwardsSharePlayers - award voting for player awards
-  Appearances - details on the positions a player appeared at
-  Schools - list of colleges that players attended
-  CollegePlaying - list of players and the colleges they attended
-  Parks - list of major league ballparks
-  HomeGames - Number of homegames played by each team in each ballpark
-```
-
-For more detailed information, see the [docs online](http://www.seanlahman.com/files/database/readme2019.txt).
-
-## Writing Queries
-
-We've provided a skeleton solution file, `proj1.sql`, to help you get started. In the file, you'll find a `CREATE VIEW` statement for each part of the first 4 questions below, specifying a particular view name (like `q2i`) and list of column names (like `playerid`, `lastname`). The view name and column names constitute the interface against which we will grade this assignment. In other words, _don't change or remove these names_. Your job is to fill out the view definitions in a way that populates the views with the right tuples.
-
-For example, consider Question 0: "What is the highest `era` ([earned run average](https://en.wikipedia.org/wiki/Earned\_run\_average)) recorded in baseball history?".
-
-In the `proj1.sql` file we provide:
-
-```sql
-CREATE VIEW q0(era) AS
-    SELECT 1 -- replace this line
-;
-```
-
-You would edit this with your answer, keeping the schema the same:
-
-```sql
--- solution you provide
-CREATE VIEW q0(era) AS
- SELECT MAX(era)
- FROM pitching
-;
-```
-
-To complete the project, create a view for `q0` as above (via copy-paste), and for all of the following queries, which you will need to write yourself.
-
-You can confirm the test is now passing by running `python3 test.py -q 0`
-
-```
-> python3 test.py -q 0
-PASS q0
-```
-
-More details on testing can be found in the [Testing](testing.md) section.
-
-## Your Tasks
+## Tasks
 
 ### Task 1: **Basics**
 
@@ -117,6 +12,20 @@ Note: Some birth years have no players; your answer can simply skip those years.
 
 **iv.** Following the results of part iii, now only include groups with an average height > `70`. Again order the results by `birthyear` in _ascending_ order.
 
+**Ans:**
+```sql
+CREATE VIEW q0(era)
+AS
+  SELECT MAX(era) FROM pitching
+;
+```
+
+**Expected Output:**
+```
+era
+189.0
+```
+
 ### Task 2: **Hall of Fame Schools**
 
 **i.** Find the `namefirst`, `namelast`, `playerid` and `yearid` of all people who were successfully inducted into the Hall of Fame in _descending_ order of `yearid`. Break ties on `yearid` by `playerid` (ascending).
@@ -126,6 +35,16 @@ Note: Some birth years have no players; your answer can simply skip those years.
 * Note: a player may appear in the results multiple times (once per year in a college in California).
 
 **iii.** Find the `playerid`, `namefirst`, `namelast` and `schoolid` of all people who were successfully inducted into the Hall of Fame -- whether or not they played in college. Return people in _descending_ order of `playerid`. Break ties on `playerid` by `schoolid` (ascending). (Note: `schoolid` should be `NULL` if they did not play in college.)
+
+**Ans:**
+```sql
+
+```
+
+**Expected Output:**
+```
+
+```
 
 ### Task 3: [**SaberMetrics**](https://en.wikipedia.org/wiki/Sabermetrics)
 
@@ -137,11 +56,31 @@ Note: Some birth years have no players; your answer can simply skip those years.
 * Data set note: The column `H` o f the `batting` table represents all hits = (# singles) + (# doubles) + (# triples) + (# home runs), not just (# singles) so you’ll need to account for some double-counting
 * If a player played on multiple teams during the same season (for example `anderma02` in 2006) treat their time on each team separately for this calculation
 
+**Ans:**
+```sql
+
+```
+
+**Expected Output:**
+```
+
+```
+
 **ii.** Following the results from Part i, find the `playerid`, `namefirst`, `namelast` and `lslg` (Lifetime Slugging Percentage) for the players with the top 10 Lifetime Slugging Percentage. Lifetime Slugging Percentage (LSLG) uses the same formula as Slugging Percentage (SLG), but it uses the number of singles, doubles, triples, home runs, and at bats each player has over their entire career, rather than just over a single season.
 
 Note that the database only gives batting information broken down by year; you will need to convert to total information across all time (from the earliest date recorded up to the last date recorded) to compute `lslg`. Order the results by `lslg` (descending) and break ties by `playerid` (ascending)
 
 * Note: Make sure that you only include players with more than 50 at-bats across their lifetime.
+
+**Ans:**
+```sql
+
+```
+
+**Expected Output:**
+```
+
+```
 
 **iii.** Find the `namefirst`, `namelast` and Lifetime Slugging Percentage (`lslg`) of batters whose lifetime slugging percentage is higher than that of San Francisco favorite Willie Mays.
 
@@ -156,6 +95,16 @@ _Also just for fun_: SF Giants VP of Baseball Operations, [Yeshayah Goldfarb](ht
 > Using the Lahman database as your guide, make an argument for when MLBs “Steroid Era” started and ended. There are a number of different ways to explore this question using the data.
 
 (Please do not include your "just for fun" answers in your solution file! They will break the autograder.)
+
+**Ans:**
+```sql
+
+```
+
+**Expected Output:**
+```
+
+```
 
 ### Task 4: **Salaries**
 
@@ -185,4 +134,4 @@ Some useful information:
 
 ## You're done!
 
-Rerun `python3 test.py` to see if you're passing tests. If so, follow the instructions in the next section to submit your work.
+Rerun `python3 test.py` to see if you're passing tests.
