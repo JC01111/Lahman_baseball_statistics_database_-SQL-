@@ -98,7 +98,7 @@ if __name__ == '__main__':
         description='Run the tests for Project 1')
     parser.add_argument('-q', '--question', default="all")
     parser.add_argument('-d', '--data', default=defaultdb)
-    parser.add_argument('--file', default="proj1.sql")
+    parser.add_argument('--file', default="queries.sql")
     parser.add_argument('--expected', default="expected_output")
 
     args = parser.parse_args()
